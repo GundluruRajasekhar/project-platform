@@ -1,4 +1,4 @@
-const prisma = require('../config/db');
+const prisma = require('./db');
 
 // GET /tasks?projectId=&status=&priority=&assigneeId=&search=
 async function listTasks(req, res, next) {
