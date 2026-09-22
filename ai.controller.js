@@ -1,5 +1,5 @@
-const prisma = require('../config/db');
-const { askForJSON, aiEnabled } = require('../utils/ai');
+const prisma = require('./db');
+const { askForJSON, aiEnabled } = require('./ai');
 
 // Simple templated fallback used when ANTHROPIC_API_KEY isn't configured.
 // Keeps the feature demoable without a real LLM call.
