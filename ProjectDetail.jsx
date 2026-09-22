@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import client from '../api/client';
-import AITaskGenerator from '../components/AITaskGenerator';
+import client from './client';
+import AITaskGenerator from './AITaskGenerator';
 
 const STATUSES = ['TODO', 'IN_PROGRESS', 'DONE'];
 const PRIORITIES = ['LOW', 'MEDIUM', 'HIGH', 'URGENT'];
