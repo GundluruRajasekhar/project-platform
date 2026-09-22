@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import client from '../api/client';
+import client from './client';
 
 export default function AITaskGenerator({ projectId, onSaved }) {
   const [goal, setGoal] = useState('');
