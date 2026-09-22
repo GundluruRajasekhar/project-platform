@@ -1,6 +1,6 @@
 const express = require('express');
-const { generateTasks, prioritizeTasks } = require('../controllers/ai.controller');
-const { requireAuth } = require('../middleware/auth');
+const { generateTasks, prioritizeTasks } = require('./ai.controller');
+const { requireAuth } = require('./auth');
 
 const router = express.Router();
 router.use(requireAuth);
