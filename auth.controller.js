@@ -1,6 +1,6 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const prisma = require('../config/db');
+const prisma = require('./db');
 
 function signToken(user) {
   return jwt.sign(
