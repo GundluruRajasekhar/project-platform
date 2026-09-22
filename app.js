@@ -14,7 +14,11 @@ app.use(cors());
 app.use(express.json());
 
 app.get('/api/v1/health', (req, res) => {
-  res.json({ success: true, status: 'ok' });
+  res.json({
+    success: true,
+    status: 'ok',
+    aiEnabled: Boolean(process.env.ANTHROPIC_API_KEY),
+  });
 });
 
 app.use('/api/v1/auth', authRoutes);

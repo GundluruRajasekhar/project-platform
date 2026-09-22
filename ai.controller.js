@@ -1,5 +1,28 @@
 const prisma = require('../config/db');
-const { askForJSON } = require('../utils/ai');
+const { askForJSON, aiEnabled } = require('../utils/ai');
+
+// Simple templated fallback used when ANTHROPIC_API_KEY isn't configured.
+// Keeps the feature demoable without a real LLM call.
+function fallbackTaskBreakdown(goal) {
+  const steps = ['Plan', 'Build', 'Review', 'Ship'];
+  return {
+    tasks: steps.map((step) => ({
+      title: `${step}: ${goal}`,
+      description: `${step} phase for "${goal}" (auto-generated locally — add ANTHROPIC_API_KEY for real AI suggestions).`,
+      priority: step === 'Ship' ? 'HIGH' : 'MEDIUM',
+    })),
+  };
+}
+
+function fallbackPrioritization(tasks) {
+  return {
+    ranking: tasks.map((t, i) => ({
+      id: t.id,
+      suggestedPriority: t.dueDate ? 'HIGH' : i === 0 ? 'HIGH' : 'MEDIUM',
+      reason: 'Local fallback ranking (add ANTHROPIC_API_KEY for real AI reasoning).',
+    })),
+  };
+}
 
 // POST /ai/generate-tasks  { projectId, prompt }
 // Takes a plain-language project goal and returns a set of suggested tasks.
@@ -27,7 +50,7 @@ Respond with ONLY valid JSON, no prose, no markdown fences, in this exact shape:
   ]
 }`;
 
-    const result = await askForJSON(aiPrompt);
+    const result = await askForJSON(aiPrompt, () => fallbackTaskBreakdown(prompt));
 
     if (req.query.save === 'true') {
       const created = await prisma.$transaction(
@@ -77,7 +100,7 @@ Tasks: ${JSON.stringify(tasks)}
 Respond with ONLY valid JSON, no prose, no markdown fences, in this exact shape:
 { "ranking": [ { "id": "string", "suggestedPriority": "LOW|MEDIUM|HIGH|URGENT", "reason": "string" } ] }`;
 
-    const result = await askForJSON(aiPrompt);
+    const result = await askForJSON(aiPrompt, () => fallbackPrioritization(tasks));
     res.json({ success: true, data: result.ranking });
   } catch (err) {
     next(err);
