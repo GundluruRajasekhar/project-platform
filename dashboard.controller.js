@@ -1,4 +1,4 @@
-const prisma = require('../config/db');
+const prisma = require('./db');
 
 async function getDashboard(req, res, next) {
   try {
